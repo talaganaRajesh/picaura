@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Github } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import logo from '../assets/all in one logo 1.png'
 
 const Navbar = () => {
   const [stars, setStars] = useState(0);
@@ -17,11 +18,14 @@ const Navbar = () => {
     <nav className="w-full bg-white shadow-md py-4 px-6">
       <div className="container mx-auto flex justify-between items-center">
         {/* Logo */}
-        <div className="flex items-center">
-          <span className="text-2xl font-bold">
+        <div>
+          <span className="text-2xl flex flex-row items-center font-bold">
             <Link to="/">
-              <span className="text-black">All in one</span>
-              <span className="text-green-600">.in</span>
+              <div className="flex items-center">
+                <img src={logo} alt="logo" className="w-10 h-10 mr-2" />
+                <span className="text-black">Pic Aura</span>
+                <span className="text-green-600">.in</span>
+              </div>
             </Link>
           </span>
         </div>
