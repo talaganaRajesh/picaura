@@ -1,13 +1,15 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Video, FileText, Info } from 'lucide-react';
+import img1 from '../assets/beautiful-girl-with-autumn-leaves-photo.jpg'
+import img2 from '../assets/Picsart_24-10-28_11-05-16-459.jpg'
 
 const ImageCard = () => {
   return (
     <div className="relative h-48 overflow-hidden">
       {/* Original Image - Base layer */}
       <img
-        src="src/assets/beautiful-girl-with-autumn-leaves-photo.jpg"
+        src={img1}
         alt="Original"
         className="absolute inset-0 w-full h-full rounded-md object-cover"
       />
@@ -15,7 +17,7 @@ const ImageCard = () => {
       {/* Background Removed Image - Top layer with animation */}
       <div className="absolute inset-0 rounded-md overflow-hidden animate-reveal bg-white">
         <img
-          src="src/assets/Picsart_24-10-28_11-05-16-459.jpg"
+          src={img2}
           alt="Background Removed"
           className="w-full h-full object-cover"
         />
@@ -27,7 +29,7 @@ const ImageCard = () => {
 const Home = () => {
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
-    { title: 'Video Editor', icon: Video, path: '/videoEditor' },
+    { title: 'Image enhancer', icon: Video, path: '/enhancer' },
     { title: 'Gallery', icon: FileText, path: '/gallery' },
     { title: 'About', icon: Info, path: '/about' },
   ];
@@ -58,7 +60,7 @@ const Home = () => {
       </style>
       
       <h1 className="text-3xl font-bold mb-8 text-center">
-        <span className="text-green-600">' All in One '</span> Editing Suite
+        <span className="text-green-600">All in One</span> Editing suite
       </h1>
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-28">
