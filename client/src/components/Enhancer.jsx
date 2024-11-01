@@ -153,7 +153,7 @@ const Enhancer = () => {
                     </div>
                   ) : (
                     <div className="h-[300px] sm:h-[600px] flex items-center justify-center border rounded-lg bg-gray-50">
-                      <p className="text-gray-400">Enhanced image will appear here</p>
+                      <p className="text-gray-400">Enhanced image will appear here after processing</p>
                     </div>
                   )}
                 </div>
