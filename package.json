@@ -8,9 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "start": "node server.js",
-    "postinstall": "npm run install-unixodbc",
-    "install-unixodbc": "command -v odbc || echo 'unixODBC required: Please install it on your system.'"
+    "start": "node server.js"
   },
   "dependencies": {
     "@radix-ui/react-icons": "^1.3.0",
