@@ -1,6 +1,13 @@
 {
-    "buildCommand": "npm run build",
-    "outputDirectory": "dist",
-    "framework": "vite"
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node",
+        "config": { "includeFiles": ["vite.config.js"] }
+      }
+    ],
+    "routes": [
+      { "src": "/(.*)", "dest": "/" }
+    ]
   }
   
