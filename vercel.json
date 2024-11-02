@@ -7,5 +7,8 @@
           "installCommand": "apt-get update && apt-get install -y unixodbc-dev && npm install"
         }
       }
+    ],
+    "rewrites": [
+        { "source": "/(.*)", "destination": "/" }
     ]
   }
