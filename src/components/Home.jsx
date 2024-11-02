@@ -3,6 +3,16 @@ import { Link } from 'react-router-dom';
 import { Video, FileText, Info } from 'lucide-react';
 import img1 from '../assets/beautiful-girl-with-autumn-leaves-photo.jpg'
 import img2 from '../assets/Picsart_24-10-28_11-05-16-459.jpg'
+import textadd from '../assets/text add thumbnail 3.jpg'
+
+"use client";
+
+import { useEffect, useState } from "react";
+import { useTheme } from "next-themes";
+
+import Particles from "@/components/ui/particles";
+
+
 
 const ImageCard = () => {
   return (
@@ -27,15 +37,23 @@ const ImageCard = () => {
 };
 
 const Home = () => {
+
+    const { theme } = useTheme();
+    const [color, setColor] = useState("#006400");
+
+    useEffect(() => {
+        setColor(theme === "dark" ? "#ffffff" : "#000000");
+    }, [theme]);
+
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
+    { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
     { title: 'Image enhancer', icon: Video, path: '/enhancer' },
-    { title: 'Gallery', icon: FileText, path: '/gallery' },
     { title: 'About', icon: Info, path: '/about' },
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-bl to-green-100 from-teal-50  relative flex w-full flex-col items-center overflow-hidden rounded-lg border md:shadow-xl">
       <style>
         {`
           @keyframes reveal {
@@ -59,7 +77,7 @@ const Home = () => {
         `}
       </style>
       
-      <h1 className="text-3xl font-bold mb-8 text-center">
+      <h1 className="text-3xl font-bold mb-2 mt-7 text-center">
         <span className="text-green-600">All in One</span> Editing suite
       </h1>
       
@@ -78,11 +96,23 @@ const Home = () => {
         ))}
       </div>
       
-      <div className="absolute bottom-0 left-0 right-0 p-4">
+      <div className=" bottom-0 left-0 right-0 pt-10 p-4">
+        <Link to="https://talaganarajesh.vercel.app/">
         <h2 className="font-semibold text-center text-sm">
           Made with❤️ by <span className="text-green-600 font-bold text-lg">Rajesh</span>
         </h2>
+        </Link>
       </div>
+
+        <Particles
+            className="absolute inset-0"
+            quantity={100}
+            ease={80}
+            color={color}
+            refresh
+        />
+
+
     </div>
   );
 };

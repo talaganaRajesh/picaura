@@ -1,9 +1,73 @@
 import React, { useState } from 'react';
 import { Upload, Download, Loader2 } from 'lucide-react';
 
-const CUTOUT_PRO_API_KEY = 'YOUR_API_KEY'; // Replace with your actual API key
+// Card Components
+const Card = ({ children, className = '' }) => (
+  <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${className}`}>
+    {children}
+  </div>
+);
 
-const Enhancer = () => {
+const CardHeader = ({ children }) => (
+  <div className="px-6 py-4 border-b border-gray-200">
+    {children}
+  </div>
+);
+
+const CardTitle = ({ children }) => (
+  <h2 className="text-2xl font-bold text-gray-800">
+    {children}
+  </h2>
+);
+
+const CardContent = ({ children }) => (
+  <div className="p-6">
+    {children}
+  </div>
+);
+
+// Button Component
+const Button = ({ children, onClick, disabled = false, className = '', variant = 'primary' }) => {
+  const baseStyles = "px-4 py-2 rounded-md font-medium transition-colors duration-200 flex items-center justify-center";
+  const variants = {
+    primary: "bg-blue-600 text-white hover:bg-blue-700 disabled:bg-blue-300",
+    outline: "border border-gray-300 text-gray-700 hover:bg-gray-50"
+  };
+  
+  return (
+    <button 
+      onClick={onClick}
+      disabled={disabled}
+      className={`${baseStyles} ${variants[variant]} ${className} ${
+        disabled ? 'cursor-not-allowed opacity-50' : ''
+      }`}
+    >
+      {children}
+    </button>
+  );
+};
+
+// Alert Component
+const Alert = ({ children, variant = 'default' }) => {
+  const variants = {
+    default: "bg-blue-50 text-blue-700",
+    destructive: "bg-red-50 text-red-700"
+  };
+  
+  return (
+    <div className={`p-4 rounded-md ${variants[variant]}`}>
+      {children}
+    </div>
+  );
+};
+
+const AlertDescription = ({ children }) => (
+  <p className="text-sm">
+    {children}
+  </p>
+);
+
+const RemoveBG = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [processedImage, setProcessedImage] = useState(null);
@@ -17,153 +81,146 @@ const Enhancer = () => {
     }
   };
 
-  const enhanceImage = async (imageData) => {
-    try {
-      const response = await fetch('https://api.cutout.pro/v1.0/enhance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${CUTOUT_PRO_API_KEY}`,
-        },
-        body: JSON.stringify({ image: imageData }),
-      });
+  const removeBgFromImage = async (imageFile) => {
+    const formData = new FormData();
+    formData.append('image_file', imageFile);
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
+    const response = await fetch('https://api.pixelcut.ai/image/enhance', {
+      method: 'POST',
+      headers: {
+        'X-Api-Key': 'sk_0317f7bc19a14f36ba56fd01afb96b1c',
+      },
+      body: formData,
+    });
 
-      const result = await response.json();
-      return result.enhanced_image; // Adjust based on the actual response structure
-    } catch (error) {
-      console.error('Error processing image:', error);
-      alert(`Failed to enhance image: ${error.message}`);
-      return null;
+    if (!response.ok) {
+      throw new Error('Failed to remove background');
     }
+
+    const blob = await response.blob();
+    return URL.createObjectURL(blob);
   };
 
   const processImage = async () => {
     if (!image) return;
     setLoading(true);
-
+  
     try {
       const imageFile = await fetch(image)
         .then((res) => res.blob())
         .then((blob) => new File([blob], 'image.png', { type: 'image/png' }));
-
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const enhancedImageUrl = await enhanceImage(reader.result);
-        setProcessedImage(enhancedImageUrl);
-        setLoading(false);
-      };
-      reader.readAsDataURL(imageFile);
+  
+      const processedImageUrl = await removeBgFromImage(imageFile);
+      setProcessedImage(processedImageUrl);
+      setLoading(false);
     } catch (error) {
       console.error('Error processing image:', error);
       setLoading(false);
-      alert('Error processing image. Please make sure you have an internet connection.');
+      alert('Error processing image. Please make sure you have internet connection.');
     }
   };
 
   const downloadImage = () => {
     if (processedImage) {
       const link = document.createElement('a');
-      link.download = 'enhanced-image.png';
+      link.download = 'removed-background.png';
       link.href = processedImage;
       link.click();
     }
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 p-4 sm:p-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="bg-white rounded-lg shadow-lg p-4 sm:p-6">
-          <h1 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6 text-green-600 text-center sm:text-left">
-            Image Enhancer
-          </h1>
-
-          <div className="flex flex-col gap-4 sm:gap-6">
-            <div className="flex flex-col sm:flex-row justify-center bg-slate-100 rounded-lg py-6 sm:py-14 items-center gap-4">
-              <div className="border-2 border-dashed border-gray-400 rounded-lg p-4 w-full sm:w-auto">
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-upload"
+    <div className='min-h-screen p-4 bg-gradient-to-bl to-green-100 from-teal-100'>
+    <Card className="w-full max-w-3xl mx-auto mt-24">
+      <CardHeader>
+        <CardTitle>AI Background <span className='text-green-600'>Remover</span></CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-6">
+          {/* File Upload Section */}
+          <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-green-400 transition-colors">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="hidden"
+              id="image-input"
+            />
+            <label
+              htmlFor="image-input"
+              className="flex flex-col items-center cursor-pointer"
+            >
+              {image ? (
+                <img
+                  src={image}
+                  alt="Preview"
+                  className="max-h-64 mb-4 rounded-lg"
                 />
-                <label htmlFor="image-upload" className="cursor-pointer px-4 sm:px-12 inline-block w-full text-center">
-                  <div className="flex items-center justify-center gap-2">
-                    <Upload className="w-5 h-5 text-gray-400" />
-                    <span className="text-sm text-gray-800">
-                      {image ? 'Change Image' : 'Upload'}
-                    </span>
-                  </div>
-                </label>
-              </div>
-
-              <button
-                onClick={processImage}
-                disabled={!image || loading}
-                className="bg-blue-600 font-semibold text-white px-6 py-4 rounded-md hover:bg-blue-600 disabled:bg-gray-300 w-full sm:w-auto"
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center gap-2">
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Processing...</span>
-                  </div>
-                ) : (
-                  <span>Enhance Image</span>
-                )}
-              </button>
-            </div>
-
-            {image && (
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
-                <div className="w-full sm:w-1/4">
-                  <h2 className="text-sm font-semibold mb-2 mt-3">Original</h2>
-                  <div className="border rounded-lg p-2">
-                    <img 
-                      src={image} 
-                      alt="Original" 
-                      className="w-full h-48 object-cover rounded"
-                    />
-                  </div>
-                </div>
-
-                <div className="w-full sm:w-3/4">
-                  {processedImage ? (
-                    <div>
-                      <div className="flex flex-col sm:flex-row justify-between items-center mb-2 gap-2">
-                        <h2 className="text-lg font-semibold">Enhanced Image</h2>
-                        <button
-                          onClick={downloadImage}
-                          className="flex items-center gap-2 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 w-full sm:w-auto justify-center"
-                        >
-                          <Download className="w-5 h-5" />
-                          <span>Download</span>
-                        </button>
-                      </div>
-                      <div className="border rounded-lg p-2">
-                        <img 
-                          src={processedImage} 
-                          alt="Enhanced" 
-                          className="w-full h-[300px] sm:h-[600px] object-contain rounded bg-gray-50"
-                        />
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="h-[300px] sm:h-[600px] flex items-center justify-center border rounded-lg bg-gray-50">
-                      <p className="text-gray-400">Enhanced image will appear here after processing</p>
-                    </div>
-                  )}
-                </div>
-              </div>
-            )}
+              ) : (
+                <Upload className="w-12 h-12 text-gray-400 mb-2" />
+              )}
+              <span className="text-sm text-gray-500">
+                Click to upload an image
+              </span>
+            </label>
           </div>
+
+          {/* Action Button */}
+          <Button
+            onClick={processImage}
+            disabled={!image || loading}
+            className="w-full bg-green-700 text-white hover:bg-green-800 transition-colors duration-300"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Processing...
+              </>
+            ) : (
+              <>
+                <Upload className="w-4 h-4 mr-2" />
+                Remove Background
+              </>
+            )}
+          </Button>
+
+          {/* Processed Image Result */}
+          {processedImage && (
+            <div className="flex justify-center flex-col items-center gap-4 mt-4" ref={(el) => el && el.scrollIntoView({ behavior: 'smooth', block: 'end' })}>
+              <h3 className="text-lg font-semibold mb-2 mt-10">Processed Image</h3>
+              <img
+                src={processedImage}
+                alt="Processed"
+                className="w-3/4 rounded-lg bg-gray-100"
+                onLoad={(e) => {
+                  const imageElement = e.target;
+                  const imageBottom = imageElement.getBoundingClientRect().bottom;
+                  window.scrollTo({
+                    top: window.scrollY + imageBottom - window.innerHeight + 20,
+                    behavior: 'smooth'
+                  });
+                }}
+              />
+              <Button
+                onClick={downloadImage}
+                className="mt-2 bg-green-600 text-white hover:bg-green-700 transition-colors duration-300"
+                variant="outline"
+              >
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+            </div>
+          )}
         </div>
+      </CardContent>
+    </Card>
+    <div className="bottom-0 left-0 right-0 p-4 pt-32">
+        <h2 className="font-semibold text-center text-sm">
+          Made with❤️ by <span className="text-green-600 font-bold text-lg">Rajesh</span>
+        </h2>
       </div>
     </div>
   );
 };
 
-export default Enhancer;
+export default RemoveBG;

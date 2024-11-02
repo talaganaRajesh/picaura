@@ -55,12 +55,14 @@ const RemoveBG = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
-    // Ensure canvas is initialized
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d');
+    const canvas = canvasRef.current;
+    if (canvas) {
+      canvas.width = 800;  // Set a default width
+      canvas.height = 600; // Set a default height
+      const ctx = canvas.getContext('2d');
       if (ctx) {
         ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
       }
     }
   }, []);
@@ -95,7 +97,7 @@ const RemoveBG = () => {
   };
 
   const processImage = async () => {
-    if (!image || !canvasRef.current) return;
+    if (!image) return;
     setLoading(true);
   
     try {
@@ -105,51 +107,69 @@ const RemoveBG = () => {
   
       const processedImageUrl = await removeBgFromImage(imageFile);
       
-      // Add text to the background
       const canvas = canvasRef.current;
+      if (!canvas) {
+        throw new Error('Canvas not found');
+      }
+
       const ctx = canvas.getContext('2d');
       if (!ctx) {
         throw new Error('Unable to get canvas context');
       }
 
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        
-        // Draw background color
-        ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw text
-        ctx.font = '30px Arial';
-        ctx.fillStyle = '#333333';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        // Repeat the text to fill the background
-        const textMetrics = ctx.measureText(backgroundText);
-        const textWidth = textMetrics.width;
-        const textHeight = 30; // Approximate height of the text
-        for (let y = textHeight; y < canvas.height; y += textHeight * 2) {
-          for (let x = textWidth / 2; x < canvas.width; x += textWidth) {
-            ctx.fillText(backgroundText, x, y);
+      const originalImg = new Image();
+      originalImg.crossOrigin = "anonymous";
+      originalImg.src = image;
+
+      originalImg.onload = () => {
+        const processedImg = new Image();
+        processedImg.crossOrigin = "anonymous";
+        processedImg.src = processedImageUrl;
+
+        processedImg.onload = () => {
+          canvas.width = originalImg.width;
+          canvas.height = originalImg.height;
+          
+          // Draw original image
+          ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+          
+          // Draw text
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+
+          // Calculate font size to fit image width
+          let fontSize = Math.min(canvas.width, canvas.height) / 2; // Start with a large font size
+          ctx.font = `${fontSize}px Arial`;
+          let textWidth = ctx.measureText(backgroundText).width;
+
+          while (textWidth > canvas.width * 0.9 && fontSize > 12) {
+            fontSize--;
+            ctx.font = `${fontSize}px Arial`;
+            textWidth = ctx.measureText(backgroundText).width;
           }
-        }
-        
-        // Draw the processed image
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        setProcessedImage(canvas.toDataURL());
+
+          // Set semi-transparent white color for better visibility
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
+          ctx.strokeStyle = 'black';
+          ctx.lineWidth = 14;
+          ctx.strokeText(backgroundText, canvas.width / 2, canvas.height / 2);
+          ctx.fillStyle = 'white';
+          ctx.font = `bold ${ctx.font.split(' ')[0]} ${ctx.font.split(' ')[1]}`; // Make text bold
+
+          // Draw text once at the center
+          ctx.fillText(backgroundText, canvas.width / 2, canvas.height / 2);
+          
+          // Draw the processed image (with transparent background)
+          ctx.drawImage(processedImg, 0, 0, canvas.width, canvas.height);
+          
+          setProcessedImage(canvas.toDataURL());
+          setLoading(false);
+        };
       };
-      img.src = processedImageUrl;
-      
-      setLoading(false);
     } catch (error) {
       console.error('Error processing image:', error);
       setLoading(false);
-      alert('Error processing image. Please make sure you have internet connection.');
+      alert('Error processing image. Please try again.');
     }
   };
 
@@ -166,11 +186,10 @@ const RemoveBG = () => {
     <div className='min-h-screen p-4 bg-gradient-to-bl to-green-100 from-teal-100'>
       <Card className="w-full max-w-3xl mx-auto mt-24">
         <CardHeader>
-          <CardTitle>AI Background <span className='text-green-600'>Remover</span> & Text Adder</CardTitle>
+          <CardTitle>AI Background <span className='text-green-600'>Text Adder</span></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
-            {/* File Upload Section */}
             <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-6 hover:border-green-400 transition-colors">
               <input
                 type="file"
@@ -198,7 +217,6 @@ const RemoveBG = () => {
               </label>
             </div>
 
-            {/* Background Text Input */}
             <div className="flex items-center space-x-2">
               <Type className="w-5 h-5 text-gray-400" />
               <input
@@ -210,7 +228,6 @@ const RemoveBG = () => {
               />
             </div>
 
-            {/* Action Button */}
             <Button
               onClick={processImage}
               disabled={!image || loading}
@@ -224,12 +241,11 @@ const RemoveBG = () => {
               ) : (
                 <>
                   <Upload className="w-4 h-4 mr-2" />
-                  Remove Background & Add Text
+                  Add Text to Image
                 </>
               )}
             </Button>
 
-            {/* Processed Image Result */}
             {processedImage && (
               <div className="flex justify-center flex-col items-center gap-4 mt-4">
                 <h3 className="text-lg font-semibold mb-2 mt-10">Processed Image</h3>
