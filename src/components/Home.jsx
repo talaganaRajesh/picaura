@@ -5,6 +5,9 @@ import img1 from '../assets/beautiful-girl-with-autumn-leaves-photo.jpg'
 import img2 from '../assets/Picsart_24-10-28_11-05-16-459.jpg'
 import textadd from '../assets/text add thumbnail 3.jpg'
 
+import ShineBorder from "@/components/ui/shine-border";
+
+
 "use client";
 
 import { useEffect, useState } from "react";
@@ -15,8 +18,9 @@ import Particles from "@/components/ui/particles";
 
 
 const ImageCard = () => {
+
   return (
-    <div className="relative h-48 overflow-hidden">
+    <div className="relative h-52 w-full overflow-hidden">
       {/* Original Image - Base layer */}
       <img
         src={img1}
@@ -29,7 +33,7 @@ const ImageCard = () => {
         <img
           src={img2}
           alt="Background Removed"
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover opacity-100"
         />
       </div>
     </div>
@@ -49,7 +53,7 @@ const Home = () => {
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
     { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
     { title: 'About me', component: () => <img src="src/assets/my photo.jpg" alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
-    { title: 'Comming Soon', icon: FileText, path: '/enhancer' },
+    { title: 'Comming Soon', component: () => <img src="src/assets/coming soon 2.jpg" alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
   ];
 
   return (
@@ -81,17 +85,21 @@ const Home = () => {
         <span className="text-green-600">All in One</span> Editing suite
       </h1>
       
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-28">
         {cards.map((card, index) => (
           <Link key={index} to={card.path} className="block">
-            <div className="bg-green-100 rounded-lg shadow-md shadow-black p-6 hover:shadow-lg drop-shadow-md hover:shadow-black transition-shadow duration-300">
+            <ShineBorder
+            className="bg-green-100 shadow-md shadow-black z-50 p-6 hover:shadow-lg drop-shadow-md hover:shadow-black transition-shadow duration-300 relative rounded-lg border-1"
+            color={["#A07CFE", "#FE8FB5", "#FFBE7B"]}
+            >
               {card.component ? (
                 <card.component />
               ) : (
                 <card.icon className="w-12 h-12 mb-4 mx-auto text-blue-500" />
               )}
               <h2 className="text-xl font-bold text-green-700 mt-5 text-center">{card.title}</h2>
-            </div>
+            </ShineBorder>
           </Link>
         ))}
       </div>

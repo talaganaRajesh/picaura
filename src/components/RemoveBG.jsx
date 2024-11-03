@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Upload, Download, Loader2 } from 'lucide-react';
+import Confetti from 'react-confetti';
+// import Confetti from "./ui/confetti";
 
 // Card Components
 const Card = ({ children, className = '' }) => (
@@ -51,6 +53,7 @@ const RemoveBG = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [processedImage, setProcessedImage] = useState(null);
+  const confettiRef = useRef();
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -163,6 +166,7 @@ const RemoveBG = () => {
                 </>
               )}
             </Button>
+        
 
             {/* Processed Image Result */}
             {processedImage && (
@@ -187,6 +191,7 @@ const RemoveBG = () => {
                   <Download className="w-4 h-4 mr-2" />
                   Download
                 </Button>
+                
               </div>
             )}
           </div>
