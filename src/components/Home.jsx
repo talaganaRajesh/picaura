@@ -48,8 +48,8 @@ const Home = () => {
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
     { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
-    { title: 'Image enhancer', icon: Video, path: '/enhancer' },
-    { title: 'About', icon: Info, path: '/about' },
+    { title: 'About me', component: () => <img src="src/assets/my photo.jpg" alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
+    { title: 'Comming Soon', icon: FileText, path: '/enhancer' },
   ];
 
   return (

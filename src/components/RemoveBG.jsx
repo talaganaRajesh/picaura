@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Upload, Download, Loader2, Type } from 'lucide-react';
+import React, { useState } from 'react';
+import { Upload, Download, Loader2 } from 'lucide-react';
 
 // Card Components
 const Card = ({ children, className = '' }) => (
@@ -51,19 +51,6 @@ const RemoveBG = () => {
   const [image, setImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [processedImage, setProcessedImage] = useState(null);
-  const [backgroundText, setBackgroundText] = useState('');
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    // Ensure canvas is initialized
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext('2d');
-      if (ctx) {
-        ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, canvasRef.current.width, canvasRef.current.height);
-      }
-    }
-  }, []);
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -95,7 +82,7 @@ const RemoveBG = () => {
   };
 
   const processImage = async () => {
-    if (!image || !canvasRef.current) return;
+    if (!image) return;
     setLoading(true);
   
     try {
@@ -104,47 +91,7 @@ const RemoveBG = () => {
         .then((blob) => new File([blob], 'image.png', { type: 'image/png' }));
   
       const processedImageUrl = await removeBgFromImage(imageFile);
-      
-      // Add text to the background
-      const canvas = canvasRef.current;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) {
-        throw new Error('Unable to get canvas context');
-      }
-
-      const img = new Image();
-      img.crossOrigin = "anonymous";
-      img.onload = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        
-        // Draw background color
-        ctx.fillStyle = '#f0f0f0';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        
-        // Draw text
-        ctx.font = '30px Arial';
-        ctx.fillStyle = '#333333';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        
-        // Repeat the text to fill the background
-        const textMetrics = ctx.measureText(backgroundText);
-        const textWidth = textMetrics.width;
-        const textHeight = 30; // Approximate height of the text
-        for (let y = textHeight; y < canvas.height; y += textHeight * 2) {
-          for (let x = textWidth / 2; x < canvas.width; x += textWidth) {
-            ctx.fillText(backgroundText, x, y);
-          }
-        }
-        
-        // Draw the processed image
-        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-        
-        setProcessedImage(canvas.toDataURL());
-      };
-      img.src = processedImageUrl;
-      
+      setProcessedImage(processedImageUrl);
       setLoading(false);
     } catch (error) {
       console.error('Error processing image:', error);
@@ -166,7 +113,7 @@ const RemoveBG = () => {
     <div className='min-h-screen p-4 bg-gradient-to-bl to-green-100 from-teal-100'>
       <Card className="w-full max-w-3xl mx-auto mt-24">
         <CardHeader>
-          <CardTitle>AI Background <span className='text-green-600'>Remover</span> & Text Adder</CardTitle>
+          <CardTitle>AI Background <span className='text-green-600'>Remover</span></CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-6">
@@ -198,18 +145,6 @@ const RemoveBG = () => {
               </label>
             </div>
 
-            {/* Background Text Input */}
-            <div className="flex items-center space-x-2">
-              <Type className="w-5 h-5 text-gray-400" />
-              <input
-                type="text"
-                value={backgroundText}
-                onChange={(e) => setBackgroundText(e.target.value)}
-                placeholder="Enter background text"
-                className="flex-grow px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-              />
-            </div>
-
             {/* Action Button */}
             <Button
               onClick={processImage}
@@ -224,19 +159,25 @@ const RemoveBG = () => {
               ) : (
                 <>
                   <Upload className="w-4 h-4 mr-2" />
-                  Remove Background & Add Text
+                  Remove Background
                 </>
               )}
             </Button>
 
             {/* Processed Image Result */}
             {processedImage && (
-              <div className="flex justify-center flex-col items-center gap-4 mt-4">
+              <div className="flex justify-center flex-col items-center gap-4 mt-4" id="processed-image-section">
                 <h3 className="text-lg font-semibold mb-2 mt-10">Processed Image</h3>
                 <img
                   src={processedImage}
                   alt="Processed"
                   className="w-3/4 rounded-lg bg-gray-100"
+                  onLoad={() => {
+                    document.getElementById('processed-image-section').scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'center'
+                    });
+                  }}
                 />
                 <Button
                   onClick={downloadImage}
@@ -251,7 +192,6 @@ const RemoveBG = () => {
           </div>
         </CardContent>
       </Card>
-      <canvas ref={canvasRef} style={{ display: 'none' }} />
       <div className="bottom-0 left-0 right-0 p-4 pt-32">
         <h2 className="font-semibold text-center text-sm">
           Made with❤️ by <span className="text-green-600 font-bold text-lg">Rajesh</span>

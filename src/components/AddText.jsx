@@ -130,15 +130,21 @@ const RemoveBG = () => {
           canvas.width = originalImg.width;
           canvas.height = originalImg.height;
           
-          // Draw original image
+          // Draw original image with blur
+          ctx.filter = 'blur(8px)';
           ctx.drawImage(originalImg, 0, 0, canvas.width, canvas.height);
+          ctx.filter = 'none';
+          
+          // Draw text background (transparent)
+          ctx.fillStyle = 'transparent';
+          ctx.fillRect(0, canvas.height * 0.3, canvas.width, canvas.height * 0.4);
           
           // Draw text
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
 
           // Calculate font size to fit image width
-          let fontSize = Math.min(canvas.width, canvas.height) / 2; // Start with a large font size
+          let fontSize = Math.min(canvas.width, canvas.height) / 2;
           ctx.font = `${fontSize}px Arial`;
           let textWidth = ctx.measureText(backgroundText).width;
 
@@ -148,15 +154,14 @@ const RemoveBG = () => {
             textWidth = ctx.measureText(backgroundText).width;
           }
 
-          // Set semi-transparent white color for better visibility
-          ctx.fillStyle = 'rgba(255, 255, 255, 0.7)';
-          ctx.strokeStyle = 'black';
-          ctx.lineWidth = 14;
+          // Draw text shadow/outline for better visibility
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.7)'; // Darker outline for better contrast
+          ctx.lineWidth = 16; // Slightly thicker outline
           ctx.strokeText(backgroundText, canvas.width / 2, canvas.height / 2);
-          ctx.fillStyle = 'white';
-          ctx.font = `bold ${ctx.font.split(' ')[0]} ${ctx.font.split(' ')[1]}`; // Make text bold
-
-          // Draw text once at the center
+          
+          // Draw main text without background
+          ctx.fillStyle = 'rgba(255, 255, 255, 1)'; // Opaque white
+          ctx.font = `bold ${fontSize}px Arial`;
           ctx.fillText(backgroundText, canvas.width / 2, canvas.height / 2);
           
           // Draw the processed image (with transparent background)
