@@ -5,7 +5,7 @@
       "src": "package.json",
       "use": "@vercel/node",
       "config": {
-        "installCommand": "apt-get update && apt-get install -y unixodbc unixodbc-dev && npm install"
+        "buildCommand": "apt-get update && apt-get install -y unixodbc unixodbc-dev && npm install"
       }
     }
   ],
