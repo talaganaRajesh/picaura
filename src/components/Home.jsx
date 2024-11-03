@@ -82,7 +82,7 @@ const Home = () => {
       </style>
       
       <h1 className="text-3xl font-bold mb-2 mt-7 text-center">
-        <span className="text-green-600">All in One</span> Editing suite
+        <span className="text-green-600">All in One</span> Editing suite .
       </h1>
       
       
