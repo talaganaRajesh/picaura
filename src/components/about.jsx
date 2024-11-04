@@ -1,6 +1,7 @@
 import React from 'react';
 import { Github, Instagram, Linkedin, Mail, Globe } from 'lucide-react';
-const profileImage = "src/assets/my photo.jpg";
+import myphoto from "../assets/my photo.jpg"
+const profileImage = {myphoto};
 
 
 const Modal = ({ isOpen, onClose, children }) => {
