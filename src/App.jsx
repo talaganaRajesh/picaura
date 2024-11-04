@@ -4,7 +4,7 @@ import RemoveBG from './components/RemoveBG';
 import NavBar from './components/NavBar';
 import Enhancer from './components/Enhancer';
 import AddText from './components/AddText';
-import About from './components/About';
+import About from './components/about';
 
 function App() {
   return (
