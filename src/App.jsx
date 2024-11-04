@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
-import RemoveBG from './components/RemoveBG'
-import NavBar from './components/NavBar'
+import RemoveBG from './components/RemoveBG';
+import NavBar from './components/NavBar';
 import Enhancer from './components/Enhancer';
 import AddText from './components/AddText';
-import About from './components/about'
+import About from './components/About';
 
 function App() {
   return (
@@ -14,15 +14,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/removeBG" element={<RemoveBG />} />
-          <Route path="/enhancer" element={<Enhancer/>}/>
-          <Route path="/addtext" element={<AddText/>}/>
-          <Route path="/about" element={<About/>}/>
-          
+          <Route path="/enhancer" element={<Enhancer />} />
+          <Route path="/addtext" element={<AddText />} />
+          <Route path="/about" element={<About />} />
+          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
         </Routes>
-        
       </Router>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
