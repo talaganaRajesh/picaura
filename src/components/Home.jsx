@@ -4,6 +4,8 @@ import { Video, FileText, Info } from 'lucide-react';
 import img1 from '../assets/beautiful-girl-with-autumn-leaves-photo.jpg'
 import img2 from '../assets/Picsart_24-10-28_11-05-16-459.jpg'
 import textadd from '../assets/text add thumbnail 3.jpg'
+import myphoto from '../assets/my photo.jpg'
+import comingsoon from '../assets/coming soon 2.jpg'
 
 import ShineBorder from "@/components/ui/shine-border";
 
@@ -52,8 +54,8 @@ const Home = () => {
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
     { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
-    { title: 'About me', component: () => <img src="src/assets/my photo.jpg" alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
-    { title: 'Comming Soon', component: () => <img src="src/assets/coming soon 2.jpg" alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
+    { title: 'About me', component: () => <img src={myphoto} alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
+    { title: 'Comming Soon', component: () => <img src={comingsoon} alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
   ];
 
   return (
