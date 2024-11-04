@@ -54,8 +54,8 @@ const Home = () => {
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
     { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
-    { title: 'About me', component: () => <img src={myphoto} alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
     { title: 'Comming Soon', component: () => <img src={comingsoon} alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/enhancer' },
+    { title: 'About me', component: () => <img src={myphoto} alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
   ];
 
   return (
@@ -83,12 +83,12 @@ const Home = () => {
         `}
       </style>
       
-      <h1 className="text-3xl font-bold mb-2 mt-7 text-center">
-        <span className="text-green-600">All in One</span> Editing suite . for editors
+      <h1 className="text-3xl font-bold mt-7 text-center">
+        <span className="text-green-600">All in One</span> Editing suite
       </h1>
       
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-28">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mt-14">
         {cards.map((card, index) => (
           <Link key={index} to={card.path} className="block">
             <ShineBorder
@@ -106,7 +106,7 @@ const Home = () => {
         ))}
       </div>
       
-      <div className=" bottom-0 left-0 right-0 pt-10 p-4">
+      <div className=" bottom-0 left-0 right-0 mt-20 p-4">
         <Link to="https://talaganarajesh.vercel.app/">
         <h2 className="font-semibold text-center text-sm">
           Made with❤️ by <span className="text-green-600 font-bold text-lg">Rajesh</span>
