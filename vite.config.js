@@ -9,4 +9,8 @@ import { defineConfig } from 'vite';
                '@': path.resolve(__dirname, 'src'),
            },
        },
+       build: {
+        outDir: 'dist',
+        sourcemap: true
+      }
    });
