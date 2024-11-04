@@ -3,9 +3,10 @@
   "builds": [
     {
       "src": "package.json",
-      "use": "@vercel/node",
+      "use": "@vercel/static-build",
       "config": {
-        "buildCommand": "apt-get update && apt-get install -y unixodbc unixodbc-dev && npm install"
+        "distDir": "build",
+        "buildCommand": "npm run build"
       }
     }
   ],
