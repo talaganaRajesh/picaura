@@ -252,12 +252,18 @@ const RemoveBG = () => {
             </Button>
 
             {processedImage && (
-              <div className="flex justify-center flex-col items-center gap-4 mt-4">
+              <div className="flex justify-center flex-col items-center gap-4 mt-4" id="processed-image-section">
                 <h3 className="text-lg font-semibold mb-2 mt-10">Processed Image</h3>
                 <img
                   src={processedImage}
                   alt="Processed"
                   className="w-3/4 rounded-lg bg-gray-100"
+                  onLoad={() => {
+                    document.getElementById('processed-image-section').scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'center'
+                    });
+                  }}
                 />
                 <Button
                   onClick={downloadImage}
