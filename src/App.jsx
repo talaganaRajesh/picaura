@@ -17,7 +17,7 @@ function App() {
           <Route path="/enhancer" element={<Enhancer />} />
           <Route path="/addtext" element={<AddText />} />
           <Route path="/about" element={<About />} />
-          <Route path="*" element={<h1>404 - Page Not Found</h1>} />
+          <Route path="*" element={<h1>hi rajesh , sorry 404 - Page Not Found</h1>} />
         </Routes>
       </Router>
     </div>
