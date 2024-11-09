@@ -54,7 +54,7 @@ const Home = () => {
   const cards = [
     { title: 'Remove Background', component: ImageCard, path: '/removeBG' },
     { title: 'Add Text in BG', component: () => <img src={textadd} alt="Add Text" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/addtext' },
-    { title: 'Comming Soon', component: () => <img src={comingsoon} alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/enhancer' },
+    { title: 'Edit Manually', component: () => <img src={comingsoon} alt="coming" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/enhancer' },
     { title: 'About me', component: () => <img src={myphoto} alt="Rajesh Talagana" className="w-48 h-48 mb-4 mx-auto object-cover rounded-md" />, path: '/about' },
   ];
 
